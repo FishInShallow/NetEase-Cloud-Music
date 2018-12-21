@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import {View,Text,Image,TextInput,StyleSheet,TouchableOpacity,Slider,ScrollView,KeyboardAvoidingView} from 'react-native';
+import {View,Text,Image,TextInput,StyleSheet,TouchableOpacity,Slider,ScrollView,KeyboardAvoidingView,FlatList} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Video from 'react-native-video';
 import Orientation from 'react-native-orientation';
@@ -15,6 +15,23 @@ export default class Detail extends Component {
         duration: 0,
         currentTime: 0
       },
+      recommends: [
+        {
+          img: {uri: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3018939648,878407930&fm=26&gp=0.jpg'},
+          title: '现场燃炸了，打call太疯狂!大家燥起来!~',
+          author: 'Vico'
+        },
+        {
+          img: {uri: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=65015900,436119932&fm=26&gp=0.jpg'},
+          title: '香港群星合唱《铁血丹心》，震撼无比！',
+          author: 'Vico'
+        },
+        {
+          img: {uri: 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=350572253,601086075&fm=26&gp=0.jpg'},
+          title: '国风极乐夜，终于见到双笙啦。',
+          author: 'Vico'
+        },
+      ],
       vtitle: '现场燃炸了，打call太疯狂!大家燥起来!~',
       videoWidth: Dimensions.width ,
       videoHeight: Dimensions.width * 9 / 16,
@@ -101,7 +118,7 @@ export default class Detail extends Component {
     });
     setTimeout(() => this.setState({
       hideToolBar: true
-    }),2000);
+    }),5000);
   }
 
   _fullScreen() {
@@ -121,6 +138,18 @@ export default class Detail extends Component {
         videoHeight: Dimensions.width
       })
     }
+  }
+
+  _renderItem({item,index}) {
+    return(
+      <View style={styles.recItem}>
+        <Image source={item.img} style={{flex: 1,height: 68,marginHorizontal: 6,borderRadius: 4}} />
+        <View style={{flex: 2,borderBottomColor: '#eee',borderBottomWidth: .5}}>
+          <Text style={{flex: 2,fontSize: 16,color: '#333',paddingRight: 12,marginTop: 6}} numberOfLines={2}>{item.title}</Text>
+          <Text style={{flex: 1,fontSize: 12,color: '#999',paddingRight: 12}} numberOfLines={2}>by {item.author}</Text>
+        </View>
+      </View>
+    )
   }
 
   render() {
@@ -217,7 +246,7 @@ export default class Detail extends Component {
             posterResizeMode= 'cover'
           />
         </View>
-        <ScrollView style={{flex: 1,backgroundColor: '#fff'}}>
+        <ScrollView style={{flex: 1,backgroundColor: '#fff',marginBottom: 48}}>
           <View style={{borderBottomColor: '#eee',borderBottomWidth: 1,padding: 6}}>
             <Text style={{fontSize: 16,color: '#333',marginTop: 12}} numberOfLines={2}>{this.state.vtitle}</Text>
             <View style={{flexDirection: 'row',alignItems: 'center',justifyContent: 'space-between',marginVertical: 6}}>
@@ -256,6 +285,36 @@ export default class Detail extends Component {
               </View>
             </View>
           </View>
+          <View style={styles.userInfo}>
+            <View style={{flex: 4,flexDirection: 'row',alignItems: 'center'}}>
+              <Image source={{uri: 'http://img1.imgtn.bdimg.com/it/u=804522843,138196618&fm=200&gp=0.jpg'}} style={styles.avater} />
+              <Text style={styles.userName}>Vico</Text>
+            </View>
+            <View style={[{flex: 1,flexDirection: 'row',alignItems: 'center',justifyContent: 'center'},styles.like]}>
+              <Icon name="plus" size={16} color="#ff0033" />
+              <Text style={{fontSize: 12,color: '#ff0033',marginLeft: 2}}>关注</Text>
+            </View>
+          </View>
+          <View>
+            <View style={{height: 24,backgroundColor: '#eee',justifyContent: 'center'}}>
+              <Text style={{fontSize: 12,color: '#999',marginLeft: 6}}>相关推荐</Text>
+            </View>
+            <View>
+              <FlatList
+                data={this.state.recommends}
+                keyExtractor={(item,index) => index.toString()}
+                renderItem={this._renderItem}
+              />
+            </View>
+          </View>
+          <View>
+            <View style={{height: 24,backgroundColor: '#eee',justifyContent: 'center'}}>
+              <Text style={{fontSize: 12,color: '#999',marginLeft: 6}}>精彩评论</Text>
+            </View>
+            <View style={{height: 100,alignItems: 'center',justifyContent: 'center'}}>
+              <Text style={{fontSize: 14,color: '#999'}}>还没有人评论哟~</Text>
+            </View>
+          </View>
         </ScrollView>
         {this.state.isFull ?
         <View />
@@ -278,5 +337,35 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'flex-start'
+  },
+  userInfo: {
+    height: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 6
+  },
+  avater: {
+    height: 30,
+    width: 30,
+    borderRadius: 15
+  },
+  userName: {
+    fontSize: 16,
+    color: '#333',
+    marginLeft: 6
+  },
+  like: {
+    width: 42,
+    height: 26,
+    borderColor: '#ff0033',
+    borderWidth: 1,
+    borderRadius: 14
+  },
+  recItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 80,
+
   }
 })
