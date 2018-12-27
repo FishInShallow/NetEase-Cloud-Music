@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import {View,Text,Image,TextInput,StyleSheet,TouchableOpacity,Slider,ScrollView,KeyboardAvoidingView,FlatList} from 'react-native';
+import {View,Text,Image,TextInput,StyleSheet,TouchableOpacity,Slider,ScrollView,KeyboardAvoidingView,FlatList,StatusBar} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Video from 'react-native-video';
 import Orientation from 'react-native-orientation';
@@ -33,7 +33,7 @@ export default class Detail extends Component {
         },
       ],
       vtitle: '现场燃炸了，打call太疯狂!大家燥起来!~',
-      videoWidth: Dimensions.width ,
+      //videoWidth: Dimensions.width ,
       videoHeight: Dimensions.width * 9 / 16,
       hideToolBar: true,
       isFull: false
@@ -127,14 +127,14 @@ export default class Detail extends Component {
       Orientation.lockToPortrait();
       this.setState({
         isFull: false,
-        videoWidth: Dimensions.width,
+        //videoWidth: Dimensions.width,
         videoHeight: Dimensions.width * 9 / 16
       })
     }else{
       Orientation.lockToLandscape();
       this.setState({
         isFull: true,
-        videoWidth: Dimensions.height,
+        //videoWidth: Dimensions.height,
         videoHeight: Dimensions.width
       })
     }
@@ -156,7 +156,9 @@ export default class Detail extends Component {
 
     const videoMask = {
       height: this.state.videoHeight,
-      width: this.state.videoWidth,
+      position: 'absolute',
+      zIndex: 1,
+      width: '100%',
       backgroundColor: 'rgba(0,0,0,.2)',
       alignItems:'center',
       justifyContent: 'center',
@@ -175,7 +177,7 @@ export default class Detail extends Component {
     };
     const defVideo = {
       height: this.state.videoHeight,
-      width: this.state.videoWidth
+      width: '100%'
     };
     const timeText = {
       fontSize: 10,
@@ -192,18 +194,23 @@ export default class Detail extends Component {
 
     return (
       <View style={styles.container}>
+        <StatusBar  
+         animated={true}
+         hidden={this.state.isFull}
+         translucent={true}
+         barStyle={'light-content'}
+        >  
+        </StatusBar> 
         <View>
           <TouchableOpacity style={btnBack} onPress={() => { if(this.state.isFull){this._fullScreen()} else{goBack() }}}>
           <Icon name="chevron-left" size={42} color="rgba(255,255,255,.6)" />
           </TouchableOpacity>
         {this.state.player.pause ? 
-          <TouchableOpacity style={{position: 'absolute',zIndex: 1}} onPress={() => this._playVideo()}>
-          <View style={videoMask}>
+          <TouchableOpacity style={videoMask} onPress={() => this._playVideo()}>
             <Icon name="play" color="white" size={42} />
-          </View>
           </TouchableOpacity>
           : 
-          <View style={{position: 'absolute',zIndex: 1,height: this.state.videoHeight,width: this.state.videoWidth}}>
+          <View style={{position: 'absolute',zIndex: 1,height: this.state.videoHeight,width: '100%'}}>
             {this.state.hideToolBar ? 
             <TouchableOpacity onPress={() => this._showToolBar()} style={{height: '100%',width: '100%'}}>
 
